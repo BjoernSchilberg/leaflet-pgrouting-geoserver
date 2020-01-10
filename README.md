@@ -296,7 +296,7 @@ Ensure parameters are integers:
 }
 ```
 
-```Test shortest path:**
+**Test shortest path:**
 
 TODO
 
