@@ -258,7 +258,48 @@ Ensure parameters are integers:
 
 ## Step 10: Test GeoServer
 
+**Test nearest_vertex:**
+
+<http://localhost:8181/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=routing:nearest_vertex&outputformat=application/json&viewparams=x:36.2825;y:-1.2829>
+
+```json
+{
+    "crs": {
+        "properties": {
+            "name": "urn:ogc:def:crs:EPSG::4326"
+        },
+        "type": "name"
+    },
+    "features": [
+        {
+            "geometry": {
+                "coordinates": [
+                    36.8021031,
+                    -1.2649685
+                ],
+                "type": "Point"
+            },
+            "geometry_name": "the_geom",
+            "id": "nearest_vertex.fid-5697da35_16f9004b10a_-7ff5",
+            "properties": {
+                "id": 203,
+                "name": "Waiyaki Way"
+            },
+            "type": "Feature"
+        }
+    ],
+    "numberMatched": 1,
+    "numberReturned": 1,
+    "timeStamp": "2020-01-10T15:38:34.369Z",
+    "totalFeatures": 1,
+    "type": "FeatureCollection"
+}
+```
+
+```Test shortest path:**
+
 TODO
+
 
 ## Step 11: Leaflet JS Client
 
