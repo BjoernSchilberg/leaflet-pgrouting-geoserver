@@ -61,7 +61,7 @@ The original search was:
 
 ## Step 1: Create database with the required extensions
 
-Create database - `here named as routing`. Replace `<user>` with your
+Create database - here named as `routing`. Replace `<user>` with your
 database user.
 
 ```sql
