@@ -82,7 +82,7 @@ psql -U <user> -c "CREATE EXTENSION pgrouting;"  routing
 
 ## Step 2: Load network data to db using ogr2ogr/osm2psql/shapeloader/etc
 
-Here we are using `ogr2ogr` to load [data\roads.geojson](data\roads.geojson).
+Here we are using `ogr2ogr` to load [data/roads.geojson](data/roads.geojson).
 
 Again do not forget to replace `<user>` with your database user.
 
