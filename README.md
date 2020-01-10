@@ -296,9 +296,58 @@ Ensure parameters are integers:
 }
 ```
 
-**Test shortest path:**
+**Simple test shortest path:**
 
-TODO
+<http://localhost:8181/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=routing:shortest_path&outputformat=application/json&viewparams=source:1;target:2>
+
+```json
+    {
+    "crs": {
+        "properties": {
+            "name": "urn:ogc:def:crs:EPSG::4326"
+        },
+        "type": "name"
+    },
+    "features": [
+        {
+            "geometry": {
+                "coordinates": [
+                    [
+                        [
+                            36.8135802,
+                            -1.2872126
+                        ],
+                        [
+                            36.81396484,
+                            -1.28738089
+                        ]
+                    ]
+                ],
+                "type": "MultiLineString"
+            },
+            "geometry_name": "geom",
+            "id": "shortest_path.fid-5697da35_16f9004b10a_-7fd0",
+            "properties": {
+                "distance": 0.04667712950829339,
+                "id": 1,
+                "name": "Processional Way",
+                "seq": 1,
+                "type": "tertiary"
+            },
+            "type": "Feature"
+        }
+    ],
+    "numberMatched": 1,
+    "numberReturned": 1,
+    "timeStamp": "2020-01-10T16:47:42.234Z",
+    "totalFeatures": 1,
+    "type": "FeatureCollection"
+}
+```
+
+**Advanced test shortest path:**
+
+<http://localhost:8181/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=routing:shortest_path&outputformat=application/json&viewparams=source:1;target:1151>
 
 
 ## Step 11: Leaflet JS Client
