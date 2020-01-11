@@ -1,0 +1,14 @@
+<featureTypes>
+  <featureType>
+    <name>edges_noded</name>
+  </featureType>
+  <featureType>
+    <name>edges_noded_vertices_pgr</name>
+  </featureType>
+  <featureType>
+    <name>nearest_vertex</name>
+  </featureType>
+  <featureType>
+    <name>shortest_path</name>
+  </featureType>
+</featureTypes>

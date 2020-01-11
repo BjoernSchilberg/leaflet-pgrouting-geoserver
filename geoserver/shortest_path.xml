@@ -1,0 +1,118 @@
+<featureType>
+  <name>shortest_path</name>
+  <nativeName>shortest_path</nativeName>
+  <namespace>
+    <name>routing</name>
+  </namespace>
+  <title>shortest_path</title>
+  <keywords>
+    <string>features</string>
+    <string>shortest_path</string>
+  </keywords>
+  <srs>EPSG:4326</srs>
+  <nativeBoundingBox>
+    <minx>-180.0</minx>
+    <maxx>180.0</maxx>
+    <miny>-90.0</miny>
+    <maxy>90.0</maxy>
+    <crs>EPSG:4326</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-180.0</minx>
+    <maxx>180.0</maxx>
+    <miny>-90.0</miny>
+    <maxy>90.0</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>shortest_path</name>
+        <sql>SELECT&#xd;
+ min(r.seq) AS seq,&#xd;
+ e.old_id AS id,&#xd;
+ e.name,&#xd;
+ e.type,&#xd;
+ sum(e.distance) AS distance,&#xd;
+ST_Collect(e.the_geom) AS geom&#xd;
+ FROM pgr_dijkstra(&apos;SELECT id,source,target,distance AS cost&#xd;
+ FROM edges_noded&apos;,%source%,%target%,false) AS r,edges_noded AS e&#xd;
+ WHERE r.edge=e.id GROUP BY e.old_id,e.name,e.type
+</sql>
+        <escapeSql>false</escapeSql>
+        <geometry>
+          <name>geom</name>
+          <type>MultiLineString</type>
+          <srid>-1</srid>
+        </geometry>
+        <parameter>
+          <name>source</name>
+          <defaultValue>1</defaultValue>
+          <regexpValidator>^[\d]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>target</name>
+          <defaultValue>2</defaultValue>
+          <regexpValidator>^[\d]+$</regexpValidator>
+        </parameter>
+      </virtualTable>
+    </entry>
+  </metadata>
+  <store class="dataStore">
+    <name>routing:routing_db</name>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+  <attributes>
+    <attribute>
+      <name>seq</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Integer</binding>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Integer</binding>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>distance</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Double</binding>
+    </attribute>
+    <attribute>
+      <name>geom</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>org.locationtech.jts.geom.MultiLineString</binding>
+    </attribute>
+  </attributes>
+</featureType>
