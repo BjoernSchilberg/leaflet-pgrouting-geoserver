@@ -24,9 +24,12 @@ var sourceMarker = L.marker([-1.283147351126288, 36.822524070739746], {
   draggable: true
 })
   .on("dragend", function(e) {
-    let source = getVertex(e.target.getLatLng());
-    let target = getVertex(targetMarker.getLatLng());
-    getRoute(source, target);
+    Promise.all([
+      getVertex(e.target.getLatLng()),
+      getVertex(targetMarker.getLatLng())
+    ]).then(data => {
+      getRoute(data[0], data[1]);
+    });
   })
   .addTo(map);
 
@@ -35,37 +38,42 @@ var targetMarker = L.marker([-1.286107765621784, 36.83449745178223], {
   draggable: true
 })
   .on("dragend", function(e) {
-    let target = getVertex(e.target.getLatLng());
-    let source = getVertex(sourceMarker.getLatLng());
-    getRoute(source, target);
+    Promise.all([
+      getVertex(sourceMarker.getLatLng()),
+      getVertex(e.target.getLatLng())
+    ]).then(data => {
+      getRoute(data[0], data[1]);
+    });
   })
   .addTo(map);
 
 // function to get nearest vertex to the passed point
-function getVertex(selectedPoint) {
+async function getVertex(selectedPoint) {
   var url = `${geoserverUrl}/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=routing:nearest_vertex&outputformat=application/json&viewparams=x:${selectedPoint.lng};y:${selectedPoint.lat};`;
-  var id;
-  $.ajax({
-    url: url,
-    async: false,
-    success: function(data) {
-      var features = data.features;
-      map.removeLayer(pathLayer);
-      id = features[0].properties.id;
-    }
-  });
-  return id;
+  const response = await fetch(url);
+  var data = await response.json();
+  var features = await data.features;
+  return await features[0].properties.id;
 }
 
 // function to get the shortest path from the give source and target nodes
 function getRoute(source, target) {
   var url = `${geoserverUrl}/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=routing:shortest_path&outputformat=application/json&viewparams=source:${source};target:${target};`;
 
-  $.getJSON(url, function(data) {
-    map.removeLayer(pathLayer);
-    pathLayer = L.geoJSON(data);
-    map.addLayer(pathLayer);
-  });
+  fetch(url)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      map.removeLayer(pathLayer);
+      pathLayer = L.geoJSON(data);
+      map.addLayer(pathLayer);
+    });
 }
 
-getRoute(getVertex(sourceMarker.getLatLng()),getVertex(targetMarker.getLatLng()));
+Promise.all([
+  getVertex(sourceMarker.getLatLng()),
+  getVertex(targetMarker.getLatLng())
+]).then(data => {
+  getRoute(data[0], data[1]);
+});
