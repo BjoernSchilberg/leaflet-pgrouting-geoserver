@@ -5,15 +5,15 @@
   - [Step 0: Acquire network data](#step-0-acquire-network-data)
   - [Step 1: Create database with the required extensions](#step-1-create-database-with-the-required-extensions)
   - [Step 2: Load network data to db using ogr2ogr/osm2psql/shapeloader/etc](#step-2-load-network-data-to-db-using-ogr2ogrosm2psqlshapeloaderetc)
-  - [Step 3: Add source and target columns](#step-3-add-source-and-target-columns)
+  - [Step 3: Add source and target  columns](#step-3-add-source-and-target-columns)
   - [Step 4: Split nodes to be used in creating topology](#step-4-split-nodes-to-be-used-in-creating-topology)
   - [Step 5: Create topology](#step-5-create-topology)
-  - [Step 6: Copy attribute information from the original table to the new noded table](#step-6-copy-attribute-information-from-the-original-table-to-the-new-noded-table)
+  - [Step 6: Copy  attribute information from the original table to the new noded table](#step-6-copy-attribute-information-from-the-original-table-to-the-new-noded-table)
   - [Step 7: Determine Cost](#step-7-determine-cost)
   - [Step 8: Test shortest path with Dijkistra algorithm](#step-8-test-shortest-path-with-dijkistra-algorithm)
   - [Step 9: Publishing to GeoServer](#step-9-publishing-to-geoserver)
-    - [Step 9.1: Nearest Vertex SQL View](#step-91-nearest-vertex-sql-view)
-    - [Step 9.2: Shortest Path SQL View](#step-92-shortest-path-sql-view)
+    - [Step 9.1: **Nearest Vertex SQL View**](#step-91-nearest-vertex-sql-view)
+    - [Step 9.2: **Shortest Path SQL View**](#step-92-shortest-path-sql-view)
   - [Step 10: Test GeoServer](#step-10-test-geoserver)
   - [Step 11: Leaflet JS Client](#step-11-leaflet-js-client)
 
@@ -349,6 +349,7 @@ Ensure parameters are integers:
 
 <http://localhost:8181/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=routing:shortest_path&outputformat=application/json&viewparams=source:1;target:1151>
 
+Hint: Test results in <http://geojson.io>.
 
 ## Step 11: Leaflet JS Client
 
