@@ -1,8 +1,4 @@
 var geoserverUrl = "http://127.0.0.1:8181/geoserver";
-var selectedPoint = null;
-
-var source = null;
-var target = null;
 
 // initialize our map
 var map = L.map("map", {
@@ -28,9 +24,9 @@ var sourceMarker = L.marker([-1.283147351126288, 36.822524070739746], {
   draggable: true
 })
   .on("dragend", function(e) {
-    selectedPoint = e.target.getLatLng();
-    getVertex(selectedPoint);
-    getRoute();
+    let source = getVertex(e.target.getLatLng());
+    let target = getVertex(targetMarker.getLatLng());
+    getRoute(source, target);
   })
   .addTo(map);
 
@@ -39,40 +35,30 @@ var targetMarker = L.marker([-1.286107765621784, 36.83449745178223], {
   draggable: true
 })
   .on("dragend", function(e) {
-    selectedPoint = e.target.getLatLng();
-    getVertex(selectedPoint);
-    getRoute();
+    let target = getVertex(e.target.getLatLng());
+    let source = getVertex(sourceMarker.getLatLng());
+    getRoute(source, target);
   })
   .addTo(map);
 
 // function to get nearest vertex to the passed point
 function getVertex(selectedPoint) {
   var url = `${geoserverUrl}/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=routing:nearest_vertex&outputformat=application/json&viewparams=x:${selectedPoint.lng};y:${selectedPoint.lat};`;
+  var id;
   $.ajax({
     url: url,
     async: false,
     success: function(data) {
-      loadVertex(
-        data,
-        selectedPoint.toString() === sourceMarker.getLatLng().toString()
-      );
+      var features = data.features;
+      map.removeLayer(pathLayer);
+      id = features[0].properties.id;
     }
   });
-}
-
-// function to update the source and target nodes as returned from geoserver for later querying
-function loadVertex(response, isSource) {
-  var features = response.features;
-  map.removeLayer(pathLayer);
-  if (isSource) {
-    source = features[0].properties.id;
-  } else {
-    target = features[0].properties.id;
-  }
+  return id;
 }
 
 // function to get the shortest path from the give source and target nodes
-function getRoute() {
+function getRoute(source, target) {
   var url = `${geoserverUrl}/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=routing:shortest_path&outputformat=application/json&viewparams=source:${source};target:${target};`;
 
   $.getJSON(url, function(data) {
@@ -82,6 +68,4 @@ function getRoute() {
   });
 }
 
-getVertex(sourceMarker.getLatLng());
-getVertex(targetMarker.getLatLng());
-getRoute();
+getRoute(getVertex(sourceMarker.getLatLng()),getVertex(targetMarker.getLatLng()));
