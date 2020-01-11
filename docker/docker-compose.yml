@@ -1,0 +1,48 @@
+# If you fiddle around with the following error message:
+# Version in "./docker-compose.yml" is unsupported
+#
+# Option 1)
+# Update docker and docker compose to at least docker version 17.12.0+.
+#
+# Option 2)
+# Change version: "3.5" to version: "3"
+# And delete the name configuration form `networks:` below.
+#
+version: "3.5"
+services:
+  routing_db:
+    container_name: routing_db
+    image: pgrouting/pgrouting:v2.6.3-postgresql_12
+    networks:
+    - routing_net
+    ports:
+      - "54322:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+  routing_geoserver:
+    container_name: routing_geoserver
+    build:
+      context: ./
+      dockerfile: Dockerfile.geoserver
+    environment:
+      JAVA_OPTS: -Duser.timezone=GMT -Dorg.geotools.shapefile.datetime=true -Djava.library.path=/usr/lib
+    depends_on:
+      - routing_db
+    image: "routing_geoserver"
+    volumes:
+        - ./data:/home/geoserver/data
+    networks:
+    - routing_net 
+    ports:
+     - "8181:8080"
+
+networks:
+  routing_net:
+      # name: timeseries needs at least docker version 17.12.0+
+      # API version: "3.5"
+      # https://docs.docker.com/compose/compose-file/#name-1
+      name: routing_net 
+volumes:
+  db-data:

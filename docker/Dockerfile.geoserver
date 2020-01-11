@@ -1,0 +1,54 @@
+FROM openjdk:8-jdk-alpine
+LABEL maintainer="bjoern@intevation.de"
+LABEL version="1.0"
+VOLUME /tmp
+ARG JAVA_OPTS
+ENV JAVA_OPTS=$JAVA_OPTS
+ENV GEOSERVER_VERSION 2.16.1
+ENV GEOSERVER_HOME /opt/geoserver-$GEOSERVER_VERSION
+RUN adduser -D geoserver
+RUN chown -R geoserver /opt/
+
+RUN apk add libjpeg-turbo libjpeg-turbo-dev
+
+
+USER geoserver
+
+#Get GeoServer
+RUN cd && wget https://netcologne.dl.sourceforge.net/project/geoserver/GeoServer/$GEOSERVER_VERSION/geoserver-$GEOSERVER_VERSION-bin.zip && \
+    unzip geoserver-$GEOSERVER_VERSION-bin.zip -d /opt && rm geoserver-$GEOSERVER_VERSION-bin.zip
+#Add css plugin
+RUN cd && wget https://netcologne.dl.sourceforge.net/project/geoserver/GeoServer/$GEOSERVER_VERSION/extensions/geoserver-$GEOSERVER_VERSION-css-plugin.zip && \
+        unzip geoserver-$GEOSERVER_VERSION-css-plugin.zip -d ${GEOSERVER_HOME}/webapps/geoserver/WEB-INF/lib && rm geoserver-$GEOSERVER_VERSION-css-plugin.zip
+# For Spring-Boot project, use the entrypoint below to reduce Tomcat startup time.
+#ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar docker_java.jar
+
+# Add JPEG turbo plugin
+# https://docs.geoserver.org/stable/en/user/extensions/libjpeg-turbo/index.html
+RUN cd && wget https://netcologne.dl.sourceforge.net/project/geoserver/GeoServer/$GEOSERVER_VERSION/extensions/geoserver-$GEOSERVER_VERSION-libjpeg-turbo-plugin.zip && \
+        unzip geoserver-$GEOSERVER_VERSION-libjpeg-turbo-plugin.zip -d ${GEOSERVER_HOME}/webapps/geoserver/WEB-INF/lib && rm geoserver-$GEOSERVER_VERSION-libjpeg-turbo-plugin.zip
+
+#Enable CORS
+#https://docs.geoserver.org/latest/en/user/production/container.html#enable-cors
+RUN sed -i '\:</web-app>:i\
+<filter>\n\
+    <filter-name>cross-origin</filter-name>\n\
+    <filter-class>org.eclipse.jetty.servlets.CrossOriginFilter</filter-class>\n\
+     <init-param>\n\
+       <param-name>allowedHeaders</param-name>\n\
+       <param-value>origin, content-type, accept, authorization</param-value>\n\
+   </init-param>\n\
+</filter>\n\
+<filter-mapping>\n\
+    <filter-name>cross-origin</filter-name>\n\
+    <url-pattern>/*</url-pattern>\n\
+</filter-mapping>' ${GEOSERVER_HOME}/webapps/geoserver/WEB-INF/web.xml
+
+RUN echo "9001=PROJCS["unnamed",GEOGCS["unnamed ellipse",DATUM["unknown",SPHEROID["unnamed",6378137,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",0],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["metre",1.0],AUTHORITY["EPSG","9001"]]" >> ${GEOSERVER_HOME}/data_dir/user_projections/epsg.properties
+
+COPY ./web $GEOSERVER_HOME/data_dir/www/
+
+#Expose GeoServer's default port
+EXPOSE 8080
+
+CMD $GEOSERVER_HOME/bin/startup.sh
