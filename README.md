@@ -353,4 +353,4 @@ Hint: Test results in <http://geojson.io>.
 
 ## Step 11: Leaflet JS Client
 
-Please take a look at the code and it should be easy to follow along with the comments in the code [js/app.js](js/app.js).
+Please take a look at the code and it should be easy to follow along with the comments in the code [web/js/app.js](web/js/app.js).
