@@ -16,6 +16,7 @@
     - [Step 9.2: **Shortest Path SQL View**](#step-92-shortest-path-sql-view)
   - [Step 10: Test GeoServer](#step-10-test-geoserver)
   - [Step 11: Leaflet JS Client](#step-11-leaflet-js-client)
+  - [Optional: Test in QGIS](#optional-test-in-qgis)
 
 This repository contains the accompaning code and writeup for this [Youtube
 tutorial
@@ -354,3 +355,9 @@ Hint: Test results in <http://geojson.io>.
 ## Step 11: Leaflet JS Client
 
 Please take a look at the code and it should be easy to follow along with the comments in the code [web/js/app.js](web/js/app.js).
+
+## Optional: Test in QGIS
+
+Processing Toolbox -> Network Analysis
+
+![QGIS network analysis](qgis_network_analysis.png)
