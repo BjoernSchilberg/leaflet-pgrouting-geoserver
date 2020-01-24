@@ -5,7 +5,7 @@
 # https://gist.github.com/dergachev/7028596 ( Python 2 version)
 # https://gist.github.com/DannyHinshaw/a3ac5991d66a2fe6d97a569c6cdac534 (Python 3 version)
 
-# generate server.xml with the following command:
+# generate key.pem and server.pem with the following command:
 #    openssl req -new -x509 -keyout key.pem -out server.pem -days 365 -nodes
 
 # run as follows:
